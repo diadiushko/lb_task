@@ -18,7 +18,7 @@ import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
 public class FilesServiceTest {
-    private final static String TEST_FILE_PATH = "src/test/resources/users.test.dat";
+    private final static String TEST_FILE_PATH = "src/main/resources/users.dat";
     private final static User user = new User(1, "Artem", 20);
 
     private final String path;
