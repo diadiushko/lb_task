@@ -1,13 +1,9 @@
 package com.diadiushko.entities;
 
-import java.io.Serial;
 import java.io.Serializable;
 import java.util.Objects;
 
 public final class User implements Serializable {
-
-    @Serial
-    private static final long serialVersionUID = 142142L;
     private final long id;
     private final String name;
     private final int age;

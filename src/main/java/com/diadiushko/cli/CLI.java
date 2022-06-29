@@ -1,5 +1,7 @@
 package com.diadiushko.cli;
 
+import com.diadiushko.cli.services.DatabaseService;
+import com.diadiushko.cli.services.FilesService;
 import com.diadiushko.entities.User;
 import com.diadiushko.enums.CliCommands;
 import com.diadiushko.enums.CliMessages;
@@ -16,6 +18,7 @@ public final class CLI {
 
     public static void launch() {
         logger.info(LoggerMessages.START_CLI.getMessage());
+        DatabaseService.setConnection(false);
         System.out.println(CliMessages.WELCOME);
         receiveInput();
     }
@@ -47,5 +50,11 @@ public final class CLI {
             return;
         }
         logger.info(LoggerMessages.USER_FOUND_INFO.getMessage(), fileValue);
+        final boolean userSaved = DatabaseService.insertUser(fileValue);
+        if (userSaved) {
+            logger.info(LoggerMessages.USER_WAS_SAVED_INTO_DATABASE.getMessage());
+            return;
+        }
+        logger.info(LoggerMessages.USER_WAS_NOT_SAVED_INTO_DATABASE.getMessage());
     }
 }

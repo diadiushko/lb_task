@@ -1,4 +1,4 @@
-package com.diadiushko.cli;
+package com.diadiushko.cli.services;
 
 import java.io.*;
 

@@ -1,5 +1,6 @@
 package com.diadiushko.cli;
 
+import com.diadiushko.cli.services.FilesService;
 import com.diadiushko.entities.User;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +18,7 @@ import static org.junit.Assert.*;
 
 @RunWith(Parameterized.class)
 public class FilesServiceTest {
-    private final static String testFilePath = "src/test/resources/users.test.dat";
+    private final static String TEST_FILE_PATH = "src/test/resources/users.test.dat";
     private final static User user = new User(1, "Artem", 20);
 
     private final String path;
@@ -26,7 +27,7 @@ public class FilesServiceTest {
 
     @Before
     public void beforeEach() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(testFilePath)))) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(TEST_FILE_PATH)))) {
             oos.writeObject(user);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -40,11 +41,8 @@ public class FilesServiceTest {
 
     @Parameterized.Parameters
     public static Collection<Object[]> testConditions() {
-        return Arrays.asList(new Object[][]{
-                {"test1", false},
-                {"test/test", false},
-                {testFilePath, true},
-        });
+        final String wrongFilePath = "test/test1";
+        return Arrays.asList(new Object[][]{{wrongFilePath, false}, {TEST_FILE_PATH, true}});
     }
 
     @Test
@@ -54,7 +52,7 @@ public class FilesServiceTest {
 
     @Test
     public void getUsersFromFile() {
-        User testUser = fs.getUsersFromFile(path);
+        final User testUser = fs.getUsersFromFile(path);
         if (fileExists) {
             assertEquals(user, testUser);
         } else {

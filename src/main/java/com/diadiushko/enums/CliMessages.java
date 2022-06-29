@@ -8,10 +8,10 @@ public enum CliMessages {
             """),
     ENTER_FILEPATH("""
             Enter the path of file that contains VALID BINARY USER DATA
-            (for some mysterious reason we will save it into our Database),
             or letter "Q" to exit the app."""),
     INVALID_PATH("HAHAHAHA, very funny mate, now think twice.\n"),
-    NO_USER_DATA_FOUND("Dude, stop entering this weird staff. Your file doesn't have any valid user data.\n");
+    NO_USER_DATA_FOUND("Dude, stop entering this weird staff. Your file doesn't have any valid user data.\n"),
+    USER_ALREADY_EXISTS("User with such ID already exists in the database :)");
 
     private final String message;
 
