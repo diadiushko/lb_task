@@ -1,7 +1,8 @@
 package com.diadiushko.cli;
 
-import com.diadiushko.cli.services.DatabaseService;
 import com.diadiushko.cli.services.FilesService;
+import com.diadiushko.cli.services.impl.DatabaseService;
+import com.diadiushko.cli.services.impl.FilesBinaryService;
 import com.diadiushko.entities.User;
 import com.diadiushko.enums.CliCommands;
 import com.diadiushko.enums.CliMessages;
@@ -14,7 +15,7 @@ import java.util.Scanner;
 public final class CLI {
     private static final Logger logger = LoggerFactory.getLogger(CLI.class);
     private static final Scanner TERMINAL_SCANNER = new Scanner(System.in);
-    private static final FilesService<User> filesUserService = new FilesService<>();
+    private static final FilesService<User> filesUserService = new FilesBinaryService<>();
 
     public static void launch() {
         logger.info(LoggerMessages.START_CLI.getMessage());
@@ -44,11 +45,12 @@ public final class CLI {
             return;
         }
 
-        final User fileValue = filesUserService.getUsersFromFile(userInput);
+        final User fileValue = filesUserService.getObjectFromFile(userInput);
         if (fileValue == null) {
             System.out.println(CliMessages.NO_USER_DATA_FOUND);
             return;
         }
+
         logger.info(LoggerMessages.USER_FOUND_INFO.getMessage(), fileValue);
         final boolean userSaved = DatabaseService.insertUser(fileValue);
         if (userSaved) {

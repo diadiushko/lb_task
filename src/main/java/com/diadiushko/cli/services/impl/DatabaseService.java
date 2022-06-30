@@ -1,4 +1,4 @@
-package com.diadiushko.cli.services;
+package com.diadiushko.cli.services.impl;
 
 import com.diadiushko.entities.User;
 import com.diadiushko.enums.CliMessages;
@@ -35,16 +35,16 @@ public final class DatabaseService {
 
     public static boolean insertUser(User user) {
         try {
-            if (!connection.isValid(0)) {
+            if ((connection == null) || !connection.isValid(0)) {
                 logger.info(LoggerMessages.CONNECTION_IS_ALREADY_CLOSE.getMessage());
                 return false;
             }
-            PreparedStatement statement = connection.prepareStatement(USER_INSERT_SQL_STATEMENT);
+            final PreparedStatement statement = connection.prepareStatement(USER_INSERT_SQL_STATEMENT);
             statement.setLong(1, user.getId());
             statement.setString(2, user.getName());
             statement.setInt(3, user.getAge());
 
-            int rowsAltered = statement.executeUpdate();
+            final int rowsAltered = statement.executeUpdate();
             return (rowsAltered > 0);
         } catch (SQLException e) {
             if (e.getSQLState().equals(CONSTRAINT_KEY_VIOLATION_SQL_CODE)) {

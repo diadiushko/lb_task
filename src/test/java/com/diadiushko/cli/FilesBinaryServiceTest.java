@@ -1,40 +1,47 @@
 package com.diadiushko.cli;
 
-import com.diadiushko.cli.services.FilesService;
+import com.diadiushko.cli.services.impl.FilesBinaryService;
 import com.diadiushko.entities.User;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import java.io.BufferedOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
+import java.io.*;
 import java.util.Arrays;
 import java.util.Collection;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 @RunWith(Parameterized.class)
-public class FilesServiceTest {
+public class FilesBinaryServiceTest {
     private final static String TEST_FILE_PATH = "src/main/resources/users.dat";
-    private final static User user = new User(1, "Artem", 20);
+    private final static User testUser = new User(1, "Artem", 20);
 
     private final String path;
     private final boolean fileExists;
-    private final FilesService<User> fs = new FilesService<>();
+    private final FilesBinaryService<User> fs = new FilesBinaryService<>();
 
     @Before
     public void beforeEach() {
-        try (ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(TEST_FILE_PATH)))) {
-            oos.writeObject(user);
+        try (OutputStream bos = new BufferedOutputStream(new FileOutputStream(TEST_FILE_PATH)); ObjectOutputStream oos = new ObjectOutputStream(bos)) {
+            oos.writeObject(testUser);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public FilesServiceTest(String path, boolean fileExists) {
+    @AfterClass
+    public static void afterClass() {
+        final File testFile = new File(TEST_FILE_PATH);
+        if (testFile.isFile()) {
+            testFile.delete();
+        }
+    }
+
+    public FilesBinaryServiceTest(String path, boolean fileExists) {
         this.path = path;
         this.fileExists = fileExists;
     }
@@ -52,9 +59,9 @@ public class FilesServiceTest {
 
     @Test
     public void getUsersFromFile() {
-        final User testUser = fs.getUsersFromFile(path);
+        final User testUser = fs.getObjectFromFile(path);
         if (fileExists) {
-            assertEquals(user, testUser);
+            assertEquals(FilesBinaryServiceTest.testUser, testUser);
         } else {
             assertNull(testUser);
         }
